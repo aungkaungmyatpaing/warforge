@@ -29,6 +29,32 @@ val TEST_BANNER = "ca-app-pub-3940256099942544/9214589741"
 val TEST_INTERSTITIAL = "ca-app-pub-3940256099942544/1033173712"
 val TEST_REWARDED = "ca-app-pub-3940256099942544/5224354917"
 
+/**
+ * Release signing, read from ~/.gradle/gradle.properties.
+ *
+ * The keystore and its passwords never go in the repository. Google Play identifies an
+ * app by the key it was signed with for as long as it exists, so losing this file means
+ * losing the ability to update the app at all - it is backed up like a password, not
+ * committed like a source file.
+ *
+ * Create one with:
+ *   keytool -genkeypair -v -keystore ~/keys/warforge.jks -alias warforge \
+ *     -keyalg RSA -keysize 4096 -validity 10000
+ *
+ * Then in ~/.gradle/gradle.properties:
+ *   warforgeStoreFile=/Users/you/keys/warforge.jks
+ *   warforgeStorePassword=...
+ *   warforgeKeyAlias=warforge
+ *   warforgeKeyPassword=...
+ *
+ * With those unset the release build still runs and comes out unsigned, so a checkout
+ * with no keys is never broken - it just cannot publish.
+ */
+fun signingProp(key: String): String? =
+    (project.findProperty(key) as String?)?.takeIf { it.isNotBlank() }
+
+val storeFilePath = signingProp("warforgeStoreFile")
+
 android {
     namespace = "com.naymyo.warforge"
     compileSdk = 36
@@ -43,6 +69,17 @@ android {
         manifestPlaceholders["admobAppId"] = adUnit("admobAppId", TEST_APP_ID)
     }
 
+    signingConfigs {
+        if (storeFilePath != null && file(storeFilePath).exists()) {
+            create("release") {
+                storeFile = file(storeFilePath)
+                storePassword = signingProp("warforgeStorePassword")
+                keyAlias = signingProp("warforgeKeyAlias")
+                keyPassword = signingProp("warforgeKeyPassword")
+            }
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
@@ -53,6 +90,7 @@ android {
             buildConfigField("String", "UPDATE_MANIFEST_URL", "\"$UPDATE_MANIFEST_URL\"")
         }
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -62,6 +100,7 @@ android {
                 "String", "AD_INTERSTITIAL", "\"${adUnit("admobInterstitial", TEST_INTERSTITIAL)}\""
             )
             buildConfigField("String", "AD_REWARDED", "\"${adUnit("admobRewarded", TEST_REWARDED)}\"")
+            buildConfigField("String", "UPDATE_MANIFEST_URL", "\"$UPDATE_MANIFEST_URL\"")
         }
     }
 
