@@ -45,19 +45,21 @@ admobInterstitial=ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
 admobRewarded=ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
 ```
 
-### 1.3 Host the privacy policy
+### 1.3 Host the privacy policy — DONE
 
-Play will not accept an app that shows ads without one. `playstore/privacy-policy.html`
-is ready; the cheapest place to put it is GitHub Pages on this same repository:
+Play will not accept an app that shows ads without one. The policy is published from
+`docs/` on this repository, so updating it is a commit like anything else:
 
-*Settings → Pages → Source: Deploy from a branch → `main` / `/docs`*
+**https://aungkaungmyatpaing.github.io/warforge/**
 
-```bash
-mkdir -p docs && cp playstore/privacy-policy.html docs/index.html
-git add docs && git commit -m "Publish privacy policy" && git push
-```
+`docs/index.html` is the published copy and `playstore/privacy-policy.html` is the source
+it was taken from; change the source, copy it across, and push.
 
-It will be live at `https://<user>.github.io/<repo>/`.
+One switch has to be thrown by hand the first time, in the GitHub web UI:
+
+*Settings → Pages → Source: **Deploy from a branch** → Branch: **main** / **/docs** → Save*
+
+Pages takes a minute or two to build the first time.
 
 ### 1.4 Turn on the update check
 

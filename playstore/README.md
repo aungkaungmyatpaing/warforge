@@ -9,7 +9,7 @@ Everything the Console asks for. See `RELEASE.md` for the order to do it in.
 | `listing-my.md` | The same, Burmese |
 | `icon-512.png` | 512×512 app icon, PNG, no transparency |
 | `feature-graphic-1024x500.png` | 1024×500 feature graphic |
-| `privacy-policy.html` | Ready to publish on GitHub Pages; Play requires one because the app shows ads |
+| `privacy-policy.html` | The source of the published policy; Play requires one because the app shows ads. Published copy lives in `docs/` |
 | `screenshots/` | Seven 1080-wide phone screenshots, taken from the running app |
 
 The icon and feature graphic are **generated**, not hand-drawn — `scripts/store-graphics.py`
