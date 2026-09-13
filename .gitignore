@@ -1,0 +1,17 @@
+# Android / Gradle
+*.iml
+.gradle/
+local.properties
+build/
+.idea/
+.cxx/
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# macOS
+.DS_Store
+
+# Blender
+blender/*.blend1

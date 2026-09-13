@@ -1,0 +1,90 @@
+name: Publish version manifest
+
+# Updating version.json is what makes installed copies of the game start offering the
+# update, so it must happen AFTER the new build is actually live on the Play Store -
+# never on a push to main, or players would be sent to a listing that has not changed yet.
+#
+# Two ways to trigger it:
+#   - push a tag,  e.g.  git tag v1.1 && git push origin v1.1
+#   - run it by hand from the Actions tab, filling in the release notes
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "What's new (English)"
+        required: false
+        default: ""
+      notesMy:
+        description: "What's new (Burmese)"
+        required: false
+        default: ""
+      minSupportedVersionCode:
+        description: "Oldest build still allowed to run (leave 0 unless forcing)"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # The version the app reports is the one in the Gradle file, so that is the only
+      # place it is written down. Reading it back out here keeps the manifest and the
+      # build from ever disagreeing.
+      - name: Read version from build.gradle.kts
+        id: version
+        run: |
+          set -euo pipefail
+          gradle=app/build.gradle.kts
+          code=$(grep -oE 'versionCode[[:space:]]*=[[:space:]]*[0-9]+' "$gradle" | grep -oE '[0-9]+')
+          name=$(grep -oE 'versionName[[:space:]]*=[[:space:]]*"[^"]+"' "$gradle" | sed 's/.*"\(.*\)"/\1/')
+          test -n "$code" && test -n "$name"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Write version.json
+        env:
+          CODE: ${{ steps.version.outputs.code }}
+          NAME: ${{ steps.version.outputs.name }}
+          NOTES: ${{ github.event.inputs.notes }}
+          NOTES_MY: ${{ github.event.inputs.notesMy }}
+          MIN: ${{ github.event.inputs.minSupportedVersionCode }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib
+          old = json.loads(pathlib.Path("version.json").read_text())
+          out = {
+              "latestVersionCode": int(os.environ["CODE"]),
+              "latestVersionName": os.environ["NAME"],
+              "minSupportedVersionCode": int(os.environ.get("MIN") or 0),
+              # Keep whatever was there when the workflow was started by a tag push and
+              # nobody typed new notes.
+              "notes": os.environ.get("NOTES") or old.get("notes", ""),
+              "notesMy": os.environ.get("NOTES_MY") or old.get("notesMy", ""),
+              "url": old["url"],
+          }
+          pathlib.Path("version.json").write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n")
+          print(json.dumps(out, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Commit if it changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet version.json; then
+            echo "version.json already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add version.json
+          git commit -m "Publish version ${{ steps.version.outputs.name }} (${{ steps.version.outputs.code }})"
+          git push origin HEAD:main

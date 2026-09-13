@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/victoryRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_scrim"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="24dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_card"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/complete_title"
+            android:textColor="@color/accent"
+            android:textSize="12sp"
+            android:letterSpacing="0.18"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/vName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/ink"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/vStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" />
+
+        <com.naymyo.warforge.ui.VehicleThumbView
+            android:id="@+id/vThumb"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:id="@+id/vFact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/ink_dim"
+            android:textSize="12sp"
+            android:lineSpacingExtra="3dp" />
+
+        <TextView
+            android:id="@+id/vReward"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/accent"
+            android:textSize="12sp"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/vNext"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_primary_button"
+            android:gravity="center"
+            android:text="@string/next_vehicle"
+            android:textColor="#1A1206"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/vMuseum"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_ghost_button"
+            android:gravity="center"
+            android:text="@string/view_in_3d"
+            android:textColor="@color/steel"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/vHangar"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_ghost_button"
+            android:gravity="center"
+            android:text="@string/back_to_hangar"
+            android:textColor="@color/ink"
+            android:textSize="13sp" />
+    </LinearLayout>
+</FrameLayout>

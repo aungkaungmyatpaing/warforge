@@ -1,0 +1,109 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+}
+
+/**
+ * Reads an AdMob id from gradle.properties (or ~/.gradle/gradle.properties, or -P on the
+ * command line) and falls back to Google's official TEST id when it is not set.
+ */
+fun adUnit(key: String, testId: String): String =
+    (project.findProperty(key) as String?)?.takeIf { it.isNotBlank() } ?: testId
+
+/**
+ * Where the app looks for the published version manifest.
+ *
+ * A raw file in the project's own GitHub repository - not the REST API, which allows
+ * sixty unauthenticated requests an hour per IP and would start failing as soon as two
+ * players shared a carrier NAT. Raw files are served from a CDN and have no such limit.
+ *
+ * Set `updateManifestUrl` in ~/.gradle/gradle.properties. Left unset, the check is
+ * simply skipped and the app never touches the network for it.
+ */
+val UPDATE_MANIFEST_URL: String = (project.findProperty("updateManifestUrl") as String?)
+    ?.takeIf { it.startsWith("https://") } ?: ""
+
+// Google's public test ids -- https://developers.google.com/admob/android/test-ads
+val TEST_APP_ID = "ca-app-pub-3940256099942544~3347511713"
+val TEST_BANNER = "ca-app-pub-3940256099942544/9214589741"
+val TEST_INTERSTITIAL = "ca-app-pub-3940256099942544/1033173712"
+val TEST_REWARDED = "ca-app-pub-3940256099942544/5224354917"
+
+android {
+    namespace = "com.naymyo.warforge"
+    compileSdk = 36
+
+    defaultConfig {
+        applicationId = "com.naymyo.warforge"
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0"
+
+        manifestPlaceholders["admobAppId"] = adUnit("admobAppId", TEST_APP_ID)
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            // Debug ALWAYS uses test ads. Clicking your own live ads gets you banned.
+            buildConfigField("String", "AD_BANNER", "\"$TEST_BANNER\"")
+            buildConfigField("String", "AD_INTERSTITIAL", "\"$TEST_INTERSTITIAL\"")
+            buildConfigField("String", "AD_REWARDED", "\"$TEST_REWARDED\"")
+            buildConfigField("String", "UPDATE_MANIFEST_URL", "\"$UPDATE_MANIFEST_URL\"")
+        }
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            buildConfigField("String", "AD_BANNER", "\"${adUnit("admobBanner", TEST_BANNER)}\"")
+            buildConfigField(
+                "String", "AD_INTERSTITIAL", "\"${adUnit("admobInterstitial", TEST_INTERSTITIAL)}\""
+            )
+            buildConfigField("String", "AD_REWARDED", "\"${adUnit("admobRewarded", TEST_REWARDED)}\"")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = "17" }
+
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
+
+    testOptions {
+        // Geometry code touches android.graphics.Color; the JVM stub returns 0
+        // rather than throwing, which is all the catalog/rule tests need.
+        unitTests.isReturnDefaultValues = true
+    }
+}
+
+// The offline preview renderer reads the Blender exports straight off disk, so a
+// re-exported model has to count as a change to the tests. Without this the task stays
+// up to date and silently re-publishes the previous render.
+tasks.withType<Test>().configureEach {
+    inputs.dir(layout.projectDirectory.dir("src/main/assets/models"))
+        .withPropertyName("models")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
+dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.lifecycle.process)
+
+    implementation(libs.play.services.ads)
+    implementation(libs.user.messaging.platform)
+
+    testImplementation(libs.junit)
+    // The glTF loader parses with org.json, which the mockable android.jar stubs out to
+    // return nothing. A real implementation on the test classpath lets it be tested.
+    testImplementation(libs.json)
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#0B1118</color>
+    <color name="bg_panel">#141C25</color>
+    <color name="bg_card">#182430</color>
+    <color name="bg_card_locked">#111922</color>
+    <color name="board">#0F1720</color>
+    <color name="stroke">#24323F</color>
+    <color name="accent">#E8A53A</color>
+    <color name="accent_dim">#8A6521</color>
+    <color name="steel">#4FA3D1</color>
+    <color name="ink">#D6E3ED</color>
+    <color name="ink_dim">#7B92A5</color>
+    <color name="danger">#D1553F</color>
+    <color name="star_on">#E8A53A</color>
+    <color name="star_off">#2B3946</color>
+</resources>

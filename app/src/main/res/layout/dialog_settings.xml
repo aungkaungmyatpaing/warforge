@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/bg_panel"
+    android:padding="22dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:textColor="@color/ink"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/soundSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/sound"
+        android:textColor="@color/ink" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/musicSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/music"
+        android:textColor="@color/ink" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/assistSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/assist"
+        android:textColor="@color/ink" />
+
+    <TextView
+        android:id="@+id/closeBtn"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_primary_button"
+        android:gravity="center"
+        android:text="@string/close"
+        android:textColor="#1A1206"
+        android:textStyle="bold" />
+</LinearLayout>
