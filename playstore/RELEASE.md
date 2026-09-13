@@ -26,6 +26,18 @@ Verify it at any time:
 keytool -list -v -keystore ~/keys/warforge.jks -alias warforge
 ```
 
+**Back it up.** `scripts/backup-keystore.sh` writes an AES-256 encrypted copy plus a
+plain-text note saying how to restore it, and `--verify` proves a given archive really
+does restore — an unverified backup is not a backup:
+
+```bash
+scripts/backup-keystore.sh
+scripts/backup-keystore.sh --verify ~/Desktop/warforge-keystore-YYYYMMDD.enc
+```
+
+Keep the archive in at least two places that are not this laptop, and the keystore
+password in a password manager — not beside the archive.
+
 > Turning on **Play App Signing** in the Console (recommended, and the default for new
 > apps) means Google holds the final signing key and this one becomes your *upload* key,
 > which can be reset if it is lost. Do that and the paragraph above stops being frightening.
