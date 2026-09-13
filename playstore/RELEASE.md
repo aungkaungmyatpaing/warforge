@@ -55,13 +55,15 @@ Play will not accept an app that shows ads without one. The policy is published 
 `docs/index.html` is the published copy and `playstore/privacy-policy.html` is the source
 it was taken from; change the source, copy it across, and push.
 
-One switch has to be thrown by hand the first time, in the GitHub web UI:
+Published straight from the branch — set once, in the GitHub web UI:
 
-*Settings → Pages → Source: **GitHub Actions***
+*Settings → Pages → Source: **Deploy from a branch** → **main** / **/docs** → Save*
 
-The `pages.yml` workflow then publishes `docs/` on every push that touches it, and every
-attempt leaves a log in the Actions tab. The branch-based setting works too, but when it
-fails it just serves a 404 and tells you nothing about why.
+Nothing else is needed: a push that changes `docs/` is republished within a minute or so.
+
+> If it ever serves 404 on every path at once, the cause is almost always that Pages is
+> disabled rather than that the folder is wrong — the settings page says so in as many
+> words, and the branch dropdown will be sitting on **None**.
 
 ### 1.4 Turn on the update check
 
