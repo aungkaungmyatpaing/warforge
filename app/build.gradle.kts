@@ -55,6 +55,32 @@ fun signingProp(key: String): String? =
 
 val storeFilePath = signingProp("warforgeStoreFile")
 
+/**
+ * Shouts if a release build is about to ship with Google's test ad ids.
+ *
+ * The fallback to test ids is deliberate - a fresh checkout has to build - but it is
+ * silent, and a release that keeps them earns nothing and shows every user a banner
+ * reading "Test Ad". That is exactly the kind of mistake that is only noticed after the
+ * rollout, so it is worth a line in the build log.
+ */
+fun warnAboutTestAds() {
+    val missing = listOf("admobAppId", "admobBanner", "admobInterstitial", "admobRewarded")
+        .filter { (project.findProperty(it) as String?).isNullOrBlank() }
+    if (missing.isEmpty()) return
+    logger.warn("")
+    logger.warn("  ****************************************************************")
+    logger.warn("  *  RELEASE BUILD IS USING ADMOB **TEST** IDS                    *")
+    logger.warn("  *  Missing from ~/.gradle/gradle.properties:                    *")
+    missing.forEach { logger.warn("  *    %-58s*".format(it)) }
+    logger.warn("  *  This build will show \"Test Ad\" banners and earn nothing.     *")
+    logger.warn("  ****************************************************************")
+    logger.warn("")
+}
+
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.name.contains("Release") }) warnAboutTestAds()
+}
+
 android {
     namespace = "com.naymyo.warforge"
     compileSdk = 36

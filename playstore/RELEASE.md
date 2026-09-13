@@ -6,37 +6,36 @@ Everything the Play Console asks for, and the order to do it in.
 
 ## 1. One-time setup
 
-### 1.1 Create the signing key
+### 1.1 Create the signing key — DONE
 
 Google identifies an app by the key it was first signed with, **for as long as the app
 exists**. Lose this file and you can never update the app again — you would have to
 publish a new listing under a new package name and leave every existing player behind.
 Back it up somewhere you would back up a password.
 
+Done with `scripts/create-keystore.sh`, which prompts for the password rather than taking
+it as an argument, so it never reaches the shell history or the process list.
+
+    keystore   ~/keys/warforge.jks          RSA 4096, valid to 2054-01-29  (chmod 600)
+    signing    ~/.gradle/gradle.properties  four warforge* properties      (chmod 600)
+    SHA-256    0770dbc1e563b4a587276644043bbb09bad8a44b6bc9a701f75d4a85230dd74a
+
+Verify it at any time:
+
 ```bash
-mkdir -p ~/keys
-keytool -genkeypair -v -keystore ~/keys/warforge.jks -alias warforge \
-  -keyalg RSA -keysize 4096 -validity 10000
-```
-
-Then put the details in `~/.gradle/gradle.properties` — **not** in the project, which is
-in git:
-
-```properties
-warforgeStoreFile=/Users/<you>/keys/warforge.jks
-warforgeStorePassword=<the password you chose>
-warforgeKeyAlias=warforge
-warforgeKeyPassword=<the key password you chose>
+keytool -list -v -keystore ~/keys/warforge.jks -alias warforge
 ```
 
 > Turning on **Play App Signing** in the Console (recommended, and the default for new
 > apps) means Google holds the final signing key and this one becomes your *upload* key,
 > which can be reset if it is lost. Do that and the paragraph above stops being frightening.
 
-### 1.2 Real AdMob ids
+### 1.2 Real AdMob ids — STILL TO DO
 
 Debug builds always use Google's test ids — clicking your own live ads gets the account
-banned. Release builds read the real ones from the same file:
+banned. Release builds read the real ones from the same file, and **warn loudly in the
+build log when they are missing**, because a release that ships with test ids shows every
+player a banner reading "Test Ad" and earns nothing:
 
 ```properties
 admobAppId=ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY
@@ -167,10 +166,13 @@ Expected outcome: PEGI 3 / ESRB Everyone, or PEGI 7 at most.
 
 ## 7. Pre-launch checklist
 
-- [ ] `./gradlew testDebugUnitTest` — all green
-- [ ] `./gradlew bundleRelease` produces a **signed** bundle (not `-unsigned`)
-- [ ] Install the release build on a real device and play one vehicle end to end
-- [ ] Real AdMob ids in the release build, test ids in debug
-- [ ] Privacy policy URL loads
-- [ ] `version.json` matches the version you are about to publish
-- [ ] Screenshots contain no test ads and no debug overlays
+- [x] `./gradlew testDebugUnitTest` — 65 green
+- [x] `./gradlew bundleRelease` produces a signed bundle — `jarsigner -verify` says
+      *jar verified*, and the APK verifies under APK Signature Scheme v2
+- [x] Release build installs and runs: models load under R8, no crash
+- [ ] **Real AdMob ids** — the build still warns that it is using test ids
+- [x] Privacy policy URL loads — https://aungkaungmyatpaing.github.io/warforge/
+- [x] `version.json` matches the version being published (1.0 / code 1)
+- [x] Screenshots contain no ads and no debug overlays
+- [ ] Play App Signing enabled in the Console
+- [ ] `~/keys/warforge.jks` backed up somewhere that is not this laptop
