@@ -14,29 +14,29 @@ import com.naymyo.warforge.data.VehicleDef
  * is what makes the finished machine legible - you already know what is under the plate
  * because you put it there.
  */
-enum class Stage(val label: String, val my: String, val hint: String) {
+enum class Stage(val label: String, val hint: String) {
     POWERPACK(
-        "Powerpack", "စက်ပိုင်း",
+        "Powerpack",
         "Engine, gearbox and the shafts between them.",
     ),
     FIGHTING(
-        "Crew and stowage", "အမှုထမ်းနှင့် ကျည်",
+        "Crew and stowage",
         "Crew stations, ammunition, fuel and the gun breech.",
     ),
     ARMOUR(
-        "Armour", "သံချပ်",
+        "Armour",
         "The plate that goes over everything you just fitted.",
     ),
     HULL(
-        "Hull and structure", "ကိုယ်ထည်",
+        "Hull and structure",
         "Superstructure, decks and the hull plating.",
     ),
     RUNNING(
-        "Running gear", "မောင်းနှင်စနစ်",
+        "Running gear",
         "Tracks, wheels, suspension and undercarriage.",
     ),
     ARMAMENT(
-        "Armament and fittings", "လက်နက်နှင့် ပစ္စည်း",
+        "Armament and fittings",
         "Turret, guns, optics and everything bolted on last.",
     ),
     ;

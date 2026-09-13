@@ -26,7 +26,7 @@ class UpdateTest {
         latestVersionCode = latest,
         latestVersionName = "1.$latest",
         minSupportedVersionCode = min,
-        notes = "", notesMy = "",
+        notes = "",
         url = "https://play.google.com/store/apps/details?id=com.naymyo.warforge",
     )
 
@@ -41,7 +41,6 @@ class UpdateTest {
               "latestVersionName": "1.3",
               "minSupportedVersionCode": 2,
               "notes": "New vehicles",
-              "notesMy": "ယာဉ်အသစ်",
               "url": "https://play.google.com/store/apps/details?id=com.naymyo.warforge"
             }
             """.trimIndent(),

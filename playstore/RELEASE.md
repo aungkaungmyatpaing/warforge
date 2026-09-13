@@ -112,8 +112,7 @@ older gets a dialog it cannot dismiss.
 
 | Console field | File |
 |---|---|
-| App name, short and full description (en-US) | `playstore/listing-en.md` |
-| Same, Burmese (my-MM) | `playstore/listing-my.md` |
+| App name, short and full description | `playstore/listing-en.md` |
 | App icon (512×512) | `playstore/icon-512.png` |
 | Feature graphic (1024×500) | `playstore/feature-graphic-1024x500.png` |
 | Phone screenshots (2–8) | `playstore/screenshots/*.png` |

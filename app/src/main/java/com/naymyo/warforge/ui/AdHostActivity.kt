@@ -2,6 +2,7 @@ package com.naymyo.warforge.ui
 
 import android.os.Bundle
 import android.widget.FrameLayout
+import com.naymyo.warforge.BuildConfig
 import androidx.appcompat.app.AppCompatActivity
 import com.naymyo.warforge.ads.AdsManager
 import com.naymyo.warforge.ads.ConsentManager
@@ -27,6 +28,12 @@ abstract class AdHostActivity : AppCompatActivity() {
 
     protected fun startAdsFlow() {
         val container = adContainer ?: return
+        // Screenshot builds hide the slot entirely rather than just skipping the request,
+        // so the layout closes up and captures come out at the full screen size.
+        if (BuildConfig.HIDE_ADS) {
+            container.visibility = android.view.View.GONE
+            return
+        }
         if (AdsManager.adsAllowed || flowRunning) {
             if (AdsManager.adsAllowed) container.post { AdsManager.attachBanner(this, container) }
             return

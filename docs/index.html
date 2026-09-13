@@ -6,64 +6,94 @@
 <title>Warforge — Privacy Policy</title>
 <link rel="canonical" href="https://aungkaungmyatpaing.github.io/warforge/">
 <style>
-  :root { color-scheme: light dark; }
-  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.25rem 4rem;
-         font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
-  h2 { font-size: 1.1rem; margin-top: 2rem; }
-  .updated { opacity: 0.65; font-size: 0.9rem; }
-  ul { padding-left: 1.2rem; }
-  code { font-size: 0.92em; }
+  :root { color-scheme: light dark; --ink:#1b2127; --dim:#5c6b78; --line:#d8dee4; --bg:#fff; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e6ecf1; --dim:#9aa9b6; --line:#26333d; --bg:#10171d; }
+  }
+  body { max-width: 44rem; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; background: var(--bg);
+         color: var(--ink);
+         font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  h1 { font-size: 1.75rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
+  h2 { font-size: 1.05rem; margin: 2.25rem 0 .5rem; }
+  .updated { color: var(--dim); font-size: .9rem; margin-top: 0; }
+  .lede { font-size: 1.05rem; }
+  ul { padding-left: 1.15rem; } li { margin: .3rem 0; }
+  table { border-collapse: collapse; width: 100%; margin: .75rem 0; font-size: .95rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--line);
+           vertical-align: top; }
+  th { color: var(--dim); font-weight: 600; }
+  code { font-size: .92em; }
+  a { color: inherit; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 3rem 0 2rem; }
 </style>
 </head>
 <body>
+
 <h1>Warforge — Privacy Policy</h1>
 <p class="updated">Last updated: 13 September 2026</p>
 
-<p>Warforge is a single-player game. It has no accounts, no sign-in and no server of its
-own. Your progress — which vehicles you have built, your stars and your coins — is stored
-only on your own device and is deleted when you uninstall the app.</p>
+<p class="lede">Warforge is a single-player game. There are no accounts, no sign-in, and no
+server belonging to us. Your progress is stored on your own device and nowhere else.</p>
 
-<h2>What the app itself collects</h2>
-<p><strong>Nothing.</strong> Warforge does not collect, transmit or store any personal
-information about you. There is no analytics SDK and no crash reporting.</p>
+<h2>What we collect</h2>
+<p><strong>Nothing.</strong> The app has no analytics, no crash reporting and no user
+accounts. We never receive your name, your email address, your location, your contacts,
+your files or anything you do in the game.</p>
+
+<h2>What is stored on your device</h2>
+<ul>
+  <li>Which vehicles you have finished, and how many stars each earned</li>
+  <li>Your coin balance</li>
+  <li>Your sound, music and assist-mode settings</li>
+  <li>A copy of the update manifest described below, so the app need not re-fetch it</li>
+</ul>
+<p>All of it is deleted when you uninstall the app. None of it ever leaves your phone.</p>
 
 <h2>Advertising</h2>
-<p>Warforge shows advertisements supplied by <strong>Google AdMob</strong>. To do that,
-AdMob may collect and process data from your device, including an advertising identifier,
-approximate location derived from your IP address, and information about how you interact
-with the ads. This is done by Google, not by Warforge — we never see it.</p>
-<ul>
-  <li>Google's handling of this data is described in the
-      <a href="https://policies.google.com/technologies/partner-sites">Google Privacy
-      &amp; Terms</a> and the
-      <a href="https://support.google.com/admob/answer/6128543">AdMob policies</a>.</li>
-  <li>You can reset or delete your advertising ID in
-      <em>Settings → Google → Ads</em> on your device.</li>
-</ul>
+<p>The game shows advertisements supplied by <strong>Google AdMob</strong>. AdMob is
+operated by Google, not by us, and it collects data from your device in order to select
+and measure ads:</p>
+<table>
+  <tr><th>What</th><th>Why</th></tr>
+  <tr><td>Advertising ID</td><td>To choose ads and limit how often you see the same one</td></tr>
+  <tr><td>Approximate location, derived from your IP address</td><td>To choose ads sold in your country</td></tr>
+  <tr><td>Ad interactions — impressions and taps</td><td>To measure and bill for the ads</td></tr>
+</table>
+<p>We never see any of this. It is described in
+<a href="https://policies.google.com/technologies/partner-sites">How Google uses
+information from sites or apps that use our services</a> and in the
+<a href="https://support.google.com/admob/answer/6128543">AdMob policies</a>.</p>
+<p>You can reset or delete your advertising ID at any time in
+<em>Settings → Google → Ads</em> on your device. Where consent is required by law, the
+app asks for it before requesting personalised ads, using Google's own consent form.</p>
 
 <h2>Update checks</h2>
-<p>When the app starts it may request a small file called <code>version.json</code> from
-GitHub, to see whether a newer version has been published. That request carries nothing
-but the ordinary information any web request carries (your IP address and the app's
-version). Nothing is sent about you or about your progress, and no identifier is included.</p>
+<p>When the game starts it may request a small file called <code>version.json</code> from
+GitHub, to find out whether a newer version has been published. The request carries only
+what any web request carries — your IP address and the app's version — and no identifier
+of any kind. Nothing about you or about your progress is sent.</p>
 
 <h2>Children</h2>
-<p>Warforge is not directed at children under 13. It does not knowingly collect any
-information from them.</p>
+<p>Warforge is not directed at children under 13 and we do not knowingly collect
+information from them. If you believe a child has provided information through the app,
+write to us and we will look into it, although as described above the app collects
+nothing to begin with.</p>
 
 <h2>Your choices</h2>
 <ul>
-  <li>Uninstalling the app removes all of its stored data from your device.</li>
-  <li>Turning off your network connection stops both the advertising and the update
-      check. The game is fully playable offline.</li>
+  <li><strong>Play offline.</strong> The whole game works with no network connection.
+      Without one there are no ads and no update check.</li>
+  <li><strong>Reset your advertising ID</strong> in Android settings at any time.</li>
+  <li><strong>Uninstall</strong> to delete everything the app has stored.</li>
 </ul>
 
-<h2>Changes</h2>
-<p>If this policy changes, the revised version will be published at this address with a
-new date at the top.</p>
+<h2>Changes to this policy</h2>
+<p>If it changes, the new version is published here with a new date at the top. Material
+changes will also be noted in the app's release notes on Google Play.</p>
 
 <h2>Contact</h2>
-<p>Questions about this policy: <a href="mailto:naymyomhan@gmail.com">naymyomhan@gmail.com</a></p>
+<p><a href="mailto:naymyomhan@gmail.com">naymyomhan@gmail.com</a></p>
+
+
 </body>
 </html>

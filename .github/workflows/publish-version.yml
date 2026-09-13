@@ -13,11 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       notes:
-        description: "What's new (English)"
-        required: false
-        default: ""
-      notesMy:
-        description: "What's new (Burmese)"
+        description: "What's new"
         required: false
         default: ""
       minSupportedVersionCode:
@@ -55,7 +51,6 @@ jobs:
           CODE: ${{ steps.version.outputs.code }}
           NAME: ${{ steps.version.outputs.name }}
           NOTES: ${{ github.event.inputs.notes }}
-          NOTES_MY: ${{ github.event.inputs.notesMy }}
           MIN: ${{ github.event.inputs.minSupportedVersionCode }}
         run: |
           set -euo pipefail
@@ -69,7 +64,6 @@ jobs:
               # Keep whatever was there when the workflow was started by a tag push and
               # nobody typed new notes.
               "notes": os.environ.get("NOTES") or old.get("notes", ""),
-              "notesMy": os.environ.get("NOTES_MY") or old.get("notesMy", ""),
               "url": old["url"],
           }
           pathlib.Path("version.json").write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n")

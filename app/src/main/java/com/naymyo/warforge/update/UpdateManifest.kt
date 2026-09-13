@@ -25,9 +25,8 @@ class UpdateManifest(
      * meant to stay at 1 almost always.
      */
     val minSupportedVersionCode: Int,
-    /** What is new, in English and in Burmese. Either may be blank. */
+    /** What is new. May be blank, in which case the prompt uses a generic line. */
     val notes: String,
-    val notesMy: String,
     /** Where to send the player. Normally the game's Play Store listing. */
     val url: String,
 ) {
@@ -56,7 +55,6 @@ class UpdateManifest(
                 latestVersionName = o.optString("latestVersionName", latest.toString()),
                 minSupportedVersionCode = o.optInt("minSupportedVersionCode", 0),
                 notes = o.optString("notes", ""),
-                notesMy = o.optString("notesMy", ""),
                 url = o.optString("url", ""),
             )
         } catch (e: Exception) {

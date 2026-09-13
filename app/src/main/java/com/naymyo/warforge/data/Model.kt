@@ -8,10 +8,10 @@ import com.naymyo.warforge.solid.Mesh
 const val BP_W = 1000f
 const val BP_H = 620f
 
-enum class Branch(val label: String, val my: String) {
-    GROUND("Ground", "ကုန်းတပ်"),
-    AIR("Air", "လေတပ်"),
-    NAVAL("Naval", "ရေတပ်"),
+enum class Branch(val label: String) {
+    GROUND("Ground"),
+    AIR("Air"),
+    NAVAL("Naval"),
 }
 
 enum class Era(val label: String, val years: String) {

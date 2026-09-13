@@ -56,13 +56,9 @@ object UpdatePrompt {
             .show()
     }
 
-    /** The release notes, in Burmese where the manifest supplies them. */
-    private fun notes(activity: Activity, manifest: UpdateManifest, fallback: Int): String {
-        val burmese = activity.resources.configuration.locales[0].language == "my"
-        val text = (if (burmese) manifest.notesMy else manifest.notes)
-            .ifBlank { if (burmese) manifest.notes else manifest.notesMy }
-        return text.ifBlank { activity.getString(fallback, manifest.latestVersionName) }
-    }
+    /** The release notes, or a generic line when the manifest does not supply any. */
+    private fun notes(activity: Activity, manifest: UpdateManifest, fallback: Int): String =
+        manifest.notes.ifBlank { activity.getString(fallback, manifest.latestVersionName) }
 
     /**
      * Opens the Play app if it is installed, and the web listing if it is not.

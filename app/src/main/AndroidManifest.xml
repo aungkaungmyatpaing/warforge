@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--
+        Four permissions, and the game is fully playable with all of them denied or with
+        the device in flight mode. Nothing here reads contacts, storage, location or the
+        camera, and nothing is requested at runtime - these are all install-time.
+    -->
+
+    <!-- Serving ads, and fetching version.json to see whether an update exists. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required by the Play Services ads SDK; it checks connectivity before requesting. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Haptics on a correct or incorrect placement. -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!--
+        The advertising id. Declaring it is mandatory for any app targeting API 33+ that
+        uses AdMob; leaving it out does not make the app collect less, it just makes the
+        SDK fail. It is declared on the Data safety form as collected and shared.
+    -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application

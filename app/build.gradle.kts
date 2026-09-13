@@ -83,6 +83,14 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
+            // Store screenshots must not contain ads, and debug builds always serve
+            // AdMob's test banner. `-PscreenshotMode=true` hides the slot entirely, so
+            // captures come out at the full screen size and need no cropping.
+            buildConfigField(
+                "boolean", "HIDE_ADS",
+                (project.findProperty("screenshotMode") as String?)?.toBoolean()?.toString()
+                    ?: "false",
+            )
             // Debug ALWAYS uses test ads. Clicking your own live ads gets you banned.
             buildConfigField("String", "AD_BANNER", "\"$TEST_BANNER\"")
             buildConfigField("String", "AD_INTERSTITIAL", "\"$TEST_INTERSTITIAL\"")
@@ -91,6 +99,8 @@ android {
         }
         release {
             signingConfig = signingConfigs.findByName("release")
+            // Never in a shipping build, whatever is passed on the command line.
+            buildConfigField("boolean", "HIDE_ADS", "false")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

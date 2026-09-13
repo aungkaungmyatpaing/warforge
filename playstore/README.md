@@ -6,7 +6,6 @@ Everything the Console asks for. See `RELEASE.md` for the order to do it in.
 |---|---|
 | `RELEASE.md` | The full publishing procedure, including the data safety and content rating answers |
 | `listing-en.md` | App name, short and full description, English |
-| `listing-my.md` | The same, Burmese |
 | `icon-512.png` | 512×512 app icon, PNG, no transparency |
 | `feature-graphic-1024x500.png` | 1024×500 feature graphic |
 | `privacy-policy.html` | The source of the published policy; Play requires one because the app shows ads. Published copy lives in `docs/` |

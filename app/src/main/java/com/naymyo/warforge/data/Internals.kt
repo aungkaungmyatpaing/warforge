@@ -17,22 +17,22 @@ import com.naymyo.warforge.solid.sphere
  */
 
 /** Colour coding, consistent across every vehicle so the legend only has to be learnt once. */
-enum class ModuleKind(val label: String, val my: String, val palette: Palette) {
-    ENGINE("Engine", "အင်ဂျင်", kindPalette(0xD4562E)),
-    TRANSMISSION("Transmission", "ဂီယာ", kindPalette(0x8E6BC4)),
-    DRIVE("Final drive", "ဘီးမောင်းစနစ်", kindPalette(0x7E8F55)),
-    CREW("Crew", "အမှုထမ်း", kindPalette(0x5FB85F)),
-    AMMO("Ammunition", "ကျည်", kindPalette(0xE0B62E)),
-    FUEL("Fuel", "လောင်စာ", kindPalette(0xC97A3A)),
-    GUN("Gun and breech", "သေနတ်ပြွန်", kindPalette(0x9AA3AA)),
-    OPTICS("Optics", "မှန်ပြောင်း", kindPalette(0xC45FA8)),
-    RADIO("Radio", "ရေဒီယို", kindPalette(0x3E9BC4)),
-    RADIATOR("Cooling", "အအေးပေးစနစ်", kindPalette(0x4FC3B0)),
-    ARMOUR("Armour", "သံချပ်", kindPalette(0x6E7A84)),
-    AVIONICS("Avionics", "လေယာဉ်စနစ်", kindPalette(0x4E7FD4)),
-    MAGAZINE("Magazine", "ကျည်သိုလှောင်ခန်း", kindPalette(0xD8912E)),
-    REACTOR("Reactor", "နျူကလီးယား", kindPalette(0x7FD44E)),
-    ESCAPE("Escape system", "ထွက်ပြေးစနစ်", kindPalette(0xE05FA0)),
+enum class ModuleKind(val label: String, val palette: Palette) {
+    ENGINE("Engine", kindPalette(0xD4562E)),
+    TRANSMISSION("Transmission", kindPalette(0x8E6BC4)),
+    DRIVE("Final drive", kindPalette(0x7E8F55)),
+    CREW("Crew", kindPalette(0x5FB85F)),
+    AMMO("Ammunition", kindPalette(0xE0B62E)),
+    FUEL("Fuel", kindPalette(0xC97A3A)),
+    GUN("Gun and breech", kindPalette(0x9AA3AA)),
+    OPTICS("Optics", kindPalette(0xC45FA8)),
+    RADIO("Radio", kindPalette(0x3E9BC4)),
+    RADIATOR("Cooling", kindPalette(0x4FC3B0)),
+    ARMOUR("Armour", kindPalette(0x6E7A84)),
+    AVIONICS("Avionics", kindPalette(0x4E7FD4)),
+    MAGAZINE("Magazine", kindPalette(0xD8912E)),
+    REACTOR("Reactor", kindPalette(0x7FD44E)),
+    ESCAPE("Escape system", kindPalette(0xE05FA0)),
 
     /**
      * Powered systems: turret traverse, undercarriage retraction, steering gear.
@@ -40,7 +40,7 @@ enum class ModuleKind(val label: String, val my: String, val palette: Palette) {
      * Worth a colour of its own because whether a thing is moved by a motor or by a man
      * on a handwheel decides how fast it can be aimed, and that decides fights.
      */
-    POWER("Powered drive", "စွမ်းအင်စနစ်", kindPalette(0x3EC4A6)),
+    POWER("Powered drive", kindPalette(0x3EC4A6)),
 
     /**
      * What keeps the crew alive: ventilation, oxygen, scrubbers, fire suppression.
@@ -48,7 +48,7 @@ enum class ModuleKind(val label: String, val my: String, val palette: Palette) {
      * Usually left out of cutaways, and usually the thing that actually killed people -
      * a Mark IV's crew were poisoned by their own engine long before anybody shot at them.
      */
-    LIFE("Life support", "အသက်ရှင်ရေးစနစ်", kindPalette(0xB8D44E)),
+    LIFE("Life support", kindPalette(0xB8D44E)),
     ;
 }
 
