@@ -1,0 +1,52 @@
+name: Publish privacy policy
+
+# Publishes docs/ to GitHub Pages.
+#
+# Deploying from a workflow rather than from the branch setting, because this way the
+# deploy is versioned with the rest of the project and every attempt leaves a log in the
+# Actions tab - a site that silently 404s from the branch setting tells you nothing about
+# why.
+#
+# Requires: Settings -> Pages -> Source: GitHub Actions
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time, and never cancel one that is already publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check there is something to publish
+        run: |
+          set -euo pipefail
+          test -f docs/index.html || { echo "docs/index.html is missing"; exit 1; }
+          echo "publishing $(find docs -type f | wc -l | tr -d ' ') files"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Where it landed
+        run: echo "Published to ${{ steps.deploy.outputs.page_url }}"

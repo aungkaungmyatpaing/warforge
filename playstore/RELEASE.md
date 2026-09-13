@@ -57,9 +57,11 @@ it was taken from; change the source, copy it across, and push.
 
 One switch has to be thrown by hand the first time, in the GitHub web UI:
 
-*Settings → Pages → Source: **Deploy from a branch** → Branch: **main** / **/docs** → Save*
+*Settings → Pages → Source: **GitHub Actions***
 
-Pages takes a minute or two to build the first time.
+The `pages.yml` workflow then publishes `docs/` on every push that touches it, and every
+attempt leaves a log in the Actions tab. The branch-based setting works too, but when it
+fails it just serves a 404 and tells you nothing about why.
 
 ### 1.4 Turn on the update check
 
