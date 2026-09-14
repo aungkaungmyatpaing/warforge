@@ -18,7 +18,13 @@ it as an argument, so it never reaches the shell history or the process list.
 
     keystore   ~/keys/warforge.jks          RSA 4096, valid to 2054-01-29  (chmod 600)
     signing    ~/.gradle/gradle.properties  four warforge* properties      (chmod 600)
-    SHA-256    0770dbc1e563b4a587276644043bbb09bad8a44b6bc9a701f75d4a85230dd74a
+
+Two fingerprints, and they are not interchangeable:
+
+| | |
+|---|---|
+| **Keystore file** `10ac7da2812a3ceb5e555d101b574e2015d69e20e44e239f9c7939ba637f0522` | SHA-256 of the `.jks` itself. Use it to check a backup copy is byte-identical. `shasum -a 256 ~/keys/warforge.jks` |
+| **Certificate** `07:70:DB:C1:E5:63:B4:A5:87:27:66:44:04:3B:BB:09:BA:D8:A4:4B:6B:C9:A7:01:F7:5D:4A:85:23:0D:D7:4A` | SHA-256 of the signing certificate. This is what Play Console shows under *App integrity*, and what to compare when checking you are signing with the right key. |
 
 Verify it at any time:
 
@@ -42,19 +48,16 @@ password in a password manager — not beside the archive.
 > apps) means Google holds the final signing key and this one becomes your *upload* key,
 > which can be reset if it is lost. Do that and the paragraph above stops being frightening.
 
-### 1.2 Real AdMob ids — STILL TO DO
+### 1.2 Real AdMob ids — DONE
 
-Debug builds always use Google's test ids — clicking your own live ads gets the account
-banned. Release builds read the real ones from the same file, and **warn loudly in the
-build log when they are missing**, because a release that ships with test ids shows every
-player a banner reading "Test Ad" and earns nothing:
+Set in `~/.gradle/gradle.properties`, publisher `ca-app-pub-7351566691124059`. Only the
+three formats the app actually implements are configured — banner, interstitial and
+rewarded. There is no native placement and no app-open placement, so those ids are
+deliberately not set.
 
-```properties
-admobAppId=ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY
-admobBanner=ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
-admobInterstitial=ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
-admobRewarded=ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
-```
+Debug builds use Google's test ids for **both** the app id and the unit ids; clicking
+your own live ads is invalid traffic and gets the AdMob account closed. `AdConfigTest`
+fails the build if a debug variant ever names a live unit.
 
 ### 1.3 Host the privacy policy — DONE
 
@@ -93,7 +96,7 @@ Left unset, the app simply never checks and never touches the network for it.
 
 ```bash
 scripts/bump-version.sh 1.1     # versionCode +1, versionName 1.1
-./gradlew testDebugUnitTest     # 65 tests
+./gradlew testDebugUnitTest     # 68 tests
 ./gradlew bundleRelease         # -> app/build/outputs/bundle/release/app-release.aab
 ```
 
@@ -178,12 +181,15 @@ Expected outcome: PEGI 3 / ESRB Everyone, or PEGI 7 at most.
 
 ## 7. Pre-launch checklist
 
-- [x] `./gradlew testDebugUnitTest` — 65 green
+- [x] `./gradlew testDebugUnitTest` — 68 green
 - [x] `./gradlew bundleRelease` produces a signed bundle — `jarsigner -verify` says
       *jar verified*, and the APK verifies under APK Signature Scheme v2
 - [x] Release build installs and runs: models load under R8, no crash
-- [ ] **Real AdMob ids** — the build still warns that it is using test ids
+- [x] **Real AdMob ids** — release carries the live publisher, debug carries test ids
 - [x] Privacy policy URL loads — https://aungkaungmyatpaing.github.io/warforge/
+- [ ] Settings sheet shows "Privacy options" on an EEA/UK device (or with UMP debug
+      geography forced). Google requires the consent form to stay reachable for as long
+      as the app is installed, wherever one was shown in the first place.
 - [x] `version.json` matches the version being published (1.0 / code 1)
 - [x] Screenshots contain no ads and no debug overlays
 - [ ] Play App Signing enabled in the Console
