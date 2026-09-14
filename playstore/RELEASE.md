@@ -168,7 +168,19 @@ Nothing else is collected. There is no account, no analytics and no crash report
 
 ## 5. Content rating questionnaire
 
-Category: **Game → Educational / Simulation**
+Application type: **Game** — it has win conditions, scoring and a progression chain.
+
+Category: **Educational** (Play accepts exactly one, so this is a choice, not a list)
+
+The content is mostly teaching: ~13,300 words of history and 79 quiz questions across 21
+vehicles, with the X-ray layer there to explain rather than to play. **Puzzle** is the
+honest alternative — the assembly loop is a puzzle with decoy parts — but it is one of the
+most crowded categories on the store, and a new title with no marketing ranks nowhere in
+it. Educational is thin enough to be found in.
+
+> Educational makes Play look harder at the target audience. Keep it at 13+ (§6). Setting
+> it to include under-13 brings the Families policy into play and AdMob would have to be
+> reconfigured for child-directed treatment.
 
 - Violence: **No** — the vehicles are assembled and examined; nothing is fired at
   anything and nothing is destroyed.
