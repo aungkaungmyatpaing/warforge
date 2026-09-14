@@ -82,17 +82,16 @@ gradle.taskGraph.whenReady {
 }
 
 android {
-    namespace = "com.naymyo.warforge"
+    namespace = "com.maddog.warforge"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.naymyo.warforge"
+        applicationId = "com.maddog.warforge"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
-        manifestPlaceholders["admobAppId"] = adUnit("admobAppId", TEST_APP_ID)
     }
 
     signingConfigs {
@@ -117,7 +116,9 @@ android {
                 (project.findProperty("screenshotMode") as String?)?.toBoolean()?.toString()
                     ?: "false",
             )
-            // Debug ALWAYS uses test ads. Clicking your own live ads gets you banned.
+            // Debug ALWAYS uses test ads - the app id as well as the unit ids.
+            // Clicking your own live ads gets the AdMob account banned.
+            manifestPlaceholders["admobAppId"] = TEST_APP_ID
             buildConfigField("String", "AD_BANNER", "\"$TEST_BANNER\"")
             buildConfigField("String", "AD_INTERSTITIAL", "\"$TEST_INTERSTITIAL\"")
             buildConfigField("String", "AD_REWARDED", "\"$TEST_REWARDED\"")
@@ -131,6 +132,7 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
+            manifestPlaceholders["admobAppId"] = adUnit("admobAppId", TEST_APP_ID)
             buildConfigField("String", "AD_BANNER", "\"${adUnit("admobBanner", TEST_BANNER)}\"")
             buildConfigField(
                 "String", "AD_INTERSTITIAL", "\"${adUnit("admobInterstitial", TEST_INTERSTITIAL)}\""

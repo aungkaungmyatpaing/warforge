@@ -84,7 +84,7 @@
             android:progressTint="@color/accent"
             android:progressBackgroundTint="@color/stroke" />
 
-        <com.naymyo.warforge.game.Assembly3DView
+        <com.maddog.warforge.game.Assembly3DView
             android:id="@+id/boardView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -128,7 +128,7 @@
             android:textSize="12sp"
             android:fontFamily="monospace" />
 
-        <com.naymyo.warforge.ui.MaxHeightScrollView
+        <com.maddog.warforge.ui.MaxHeightScrollView
             android:id="@+id/partScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
                 android:textColor="@color/ink_dim"
                 android:textSize="13sp"
                 android:lineSpacingExtra="5dp" />
-        </com.naymyo.warforge.ui.MaxHeightScrollView>
+        </com.maddog.warforge.ui.MaxHeightScrollView>
     </LinearLayout>
 
     <include

@@ -38,6 +38,35 @@
         android:text="@string/assist"
         android:textColor="@color/ink" />
 
+    <!--
+        Google requires an always-available way to reopen the consent form wherever one
+        was shown, so the UMP SDK decides whether this row appears rather than us.
+    -->
+    <TextView
+        android:id="@+id/privacyOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_ghost_button"
+        android:gravity="center"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:text="@string/privacy_options"
+        android:textColor="@color/ink"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/privacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="@string/privacy_policy"
+        android:textColor="@color/ink_dim"
+        android:textSize="13sp" />
+
     <TextView
         android:id="@+id/closeBtn"
         android:layout_width="match_parent"

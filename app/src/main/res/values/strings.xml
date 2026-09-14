@@ -38,6 +38,9 @@
     <string name="quiz_check">Check answer</string>
     <string name="quiz_next">Next question</string>
 
+    <string name="privacy_options">Privacy options</string>
+    <string name="privacy_policy">Privacy policy</string>
+
     <!-- Update prompt -->
     <string name="update_title">Version %1$s is out</string>
     <string name="update_body">A new version of Warforge is on the Play Store.</string>

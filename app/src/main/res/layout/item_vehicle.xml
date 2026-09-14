@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="86dp">
 
-        <com.naymyo.warforge.ui.VehicleThumbView
+        <com.maddog.warforge.ui.VehicleThumbView
             android:id="@+id/thumb"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
