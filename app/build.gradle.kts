@@ -14,6 +14,15 @@ plugins {
 fun adUnit(key: String, testId: String): String =
     (project.findProperty(key) as String?)?.trim()?.takeIf { it.isNotBlank() } ?: testId
 
+/**
+ * Devices to serve test ads to even on a release build, comma separated.
+ *
+ * Tapping a live ad on your own phone is invalid traffic and closes the AdMob account,
+ * so every device you play a release build on should be listed here.
+ */
+val AD_TEST_DEVICES: String =
+    (project.findProperty("adTestDevices") as String?)?.trim().orEmpty()
+
 /** Google's test publisher. Anything under it is safe to click and worth nothing. */
 val TEST_PUBLISHER = "ca-app-pub-3940256099942544"
 
@@ -222,6 +231,7 @@ android {
             buildConfigField("String", "AD_INTERSTITIAL", "\"$TEST_INTERSTITIAL\"")
             buildConfigField("String", "AD_REWARDED", "\"$TEST_REWARDED\"")
             buildConfigField("String", "UPDATE_MANIFEST_URL", "\"$UPDATE_MANIFEST_URL\"")
+            buildConfigField("String", "AD_TEST_DEVICES", "\"$AD_TEST_DEVICES\"")
         }
         release {
             signingConfig = signingConfigs.findByName("release")
@@ -238,6 +248,7 @@ android {
             )
             buildConfigField("String", "AD_REWARDED", "\"${adUnit("admobRewarded", TEST_REWARDED)}\"")
             buildConfigField("String", "UPDATE_MANIFEST_URL", "\"$UPDATE_MANIFEST_URL\"")
+            buildConfigField("String", "AD_TEST_DEVICES", "\"$AD_TEST_DEVICES\"")
         }
     }
 

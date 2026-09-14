@@ -72,9 +72,10 @@ object AdsManager {
 
         MobileAds.setRequestConfiguration(
             RequestConfiguration.Builder()
-                // The theme references alcohol, so keep the ads served next to it in the
-                // same bracket -- and keep Play's content rating consistent with it.
-                .setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_MA)
+                // Teen, to match a 13+ target audience and a listing Play will rate
+                // Everyone. Mature-rated ads next to an educational title is both a bad
+                // look and inconsistent with the content rating we declare.
+                .setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_T)
                 .setTagForChildDirectedTreatment(
                     RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_FALSE
                 )
@@ -304,11 +305,18 @@ object AdsManager {
     }
 
     /**
-     * Put YOUR device's id here while testing so you see test ads on a release build too.
-     * Run once and copy the hash the SDK prints: "Use RequestConfiguration.Builder
-     * .setTestDeviceIds(Arrays.asList("33BE2250B43518CCDA7DE426D04EE231"))".
+     * Devices that should be served test ads even on a release build.
+     *
+     * Tapping your own live ads is invalid traffic and closes the AdMob account, so any
+     * phone you actually play the release build on belongs in here. Install once, find
+     * the hash the SDK prints to logcat - "Use RequestConfiguration.Builder
+     * .setTestDeviceIds(Arrays.asList("33BE2250B43518CCDA7DE426D04EE231"))" - then:
+     *
+     *     ./gradlew installRelease -PadTestDevices=33BE2250B43518CCDA7DE426D04EE231
+     *
+     * Set it in ~/.gradle/gradle.properties to keep it across builds. It is a build
+     * setting rather than a constant here so testing a device never means editing code.
      */
-    private val TEST_DEVICE_IDS = listOf<String>(
-        // "33BE2250B43518CCDA7DE426D04EE231",
-    )
+    private val TEST_DEVICE_IDS: List<String> =
+        BuildConfig.AD_TEST_DEVICES.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 }

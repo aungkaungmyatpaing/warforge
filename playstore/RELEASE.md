@@ -203,6 +203,33 @@ Expected outcome: PEGI 3 / ESRB Everyone, or PEGI 7 at most.
 
 ---
 
+## 6b. Testing the release build on your own phone
+
+⚠️ **Never tap a live ad on a device you own.** Clicking your own ads is invalid traffic
+and closes the AdMob account — it is the single easiest way to lose the money before you
+have earned any.
+
+Install once, find the device hash the SDK prints to logcat:
+
+```bash
+./gradlew installRelease
+adb logcat | grep "setTestDeviceIds"
+```
+
+It prints something like
+`Use RequestConfiguration.Builder.setTestDeviceIds(Arrays.asList("33BE22..."))`.
+Put that hash in `~/.gradle/gradle.properties`:
+
+```properties
+adTestDevices=33BE2250B43518CCDA7DE426D04EE231
+```
+
+Reinstall, and that phone now gets test ads on a release build — real ad units everywhere
+else, safe to tap here. Add more devices comma-separated.
+
+> An emulator is always a test device to AdMob, which is why the emulator screenshots show
+> a "Test Ad" label even with live unit ids configured. A real phone is not.
+
 ## 7. Pre-launch checklist
 
 - [x] `./gradlew testDebugUnitTest` — 68 green
