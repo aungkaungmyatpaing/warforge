@@ -70,6 +70,26 @@ never build three tanks in a row.
 
 ---
 
+## Build configuration
+
+Anything account-specific — AdMob ids, the signing key, the update manifest URL — lives in
+`~/.gradle/gradle.properties`, never in the repository. `gradle.properties.template` lists
+every key, and `./gradlew adConfig` prints what a build actually resolved.
+
+Debug and release are configured separately on purpose:
+
+| | Debug | Release |
+|---|---|---|
+| AdMob app id and units | Google's test ids, hard-coded and not overridable | from `gradle.properties` |
+| Application id | `com.maddog.warforge.debug` | `com.maddog.warforge` |
+| Missing ids | irrelevant — the test ids are the point | **the build fails** |
+
+The failure matters more than the convenience. A release that falls back to test ids shows
+every player a banner reading "Test Ad" and earns nothing, and there is nothing else in the
+pipeline that would notice. `AdConfigTest` covers the other direction: a debug build must
+never name a live ad unit, because the person clicking around in it is you, and clicking
+your own ads closes the AdMob account.
+
 ## Models: Blender
 
 Vehicles are modelled in `blender/`, as Python that drives Blender rather than as .blend

@@ -6,9 +6,26 @@ plugins {
 /**
  * Reads an AdMob id from gradle.properties (or ~/.gradle/gradle.properties, or -P on the
  * command line) and falls back to Google's official TEST id when it is not set.
+ *
+ * The fallback is what makes a fresh clone buildable. It is also the thing that will
+ * quietly ship a release full of "Test Ad" banners earning nothing, so `checkAdConfig`
+ * below refuses to let a release task run on it.
  */
 fun adUnit(key: String, testId: String): String =
-    (project.findProperty(key) as String?)?.takeIf { it.isNotBlank() } ?: testId
+    (project.findProperty(key) as String?)?.trim()?.takeIf { it.isNotBlank() } ?: testId
+
+/** Google's test publisher. Anything under it is safe to click and worth nothing. */
+val TEST_PUBLISHER = "ca-app-pub-3940256099942544"
+
+/**
+ * Whether [value] looks like a real AdMob id of the given shape.
+ *
+ * App ids are `ca-app-pub-<digits>~<digits>` and unit ids use a slash. Getting the two
+ * the wrong way round is the commonest configuration mistake there is, and it fails at
+ * runtime with an error that says nothing useful.
+ */
+fun looksLikeAdId(value: String, separator: Char): Boolean =
+    Regex("""ca-app-pub-\d{16}\$separator\d{10}""").matches(value)
 
 /**
  * Where the app looks for the published version manifest.
@@ -79,6 +96,88 @@ fun warnAboutTestAds() {
 
 gradle.taskGraph.whenReady {
     if (allTasks.any { it.name.contains("Release") }) warnAboutTestAds()
+}
+
+/**
+ * Refuses to build a release that would ship Google's test ads.
+ *
+ * Checked against the task graph rather than at configuration time, so `assembleDebug`
+ * on a fresh clone still works with no properties set at all - which is the whole point
+ * of the fallback. Pass `-PallowTestAds=true` to build a release deliberately without
+ * real ids, for a signing rehearsal or a screenshot run.
+ */
+gradle.taskGraph.whenReady {
+    val buildingRelease = allTasks.any { it.name.contains("Release", ignoreCase = false) }
+    if (!buildingRelease || project.findProperty("allowTestAds") == "true") return@whenReady
+
+    val problems = mutableListOf<String>()
+    fun check(key: String, value: String, separator: Char) {
+        when {
+            value.startsWith(TEST_PUBLISHER) ->
+                problems += "  $key is not set - the build fell back to Google's test id"
+            !looksLikeAdId(value, separator) ->
+                problems += "  $key does not look like an AdMob id: $value"
+        }
+    }
+    check("admobAppId", adUnit("admobAppId", TEST_APP_ID), '~')
+    check("admobBanner", adUnit("admobBanner", TEST_BANNER), '/')
+    check("admobInterstitial", adUnit("admobInterstitial", TEST_INTERSTITIAL), '/')
+    check("admobRewarded", adUnit("admobRewarded", TEST_REWARDED), '/')
+
+    if (problems.isNotEmpty()) {
+        throw GradleException(
+            buildString {
+                appendLine("Refusing to build a release with test ad ids.")
+                appendLine()
+                problems.forEach { appendLine(it) }
+                appendLine()
+                appendLine("Set them in ~/.gradle/gradle.properties - see gradle.properties.template.")
+                appendLine("To build a release anyway (signing rehearsal, screenshots):")
+                append("  ./gradlew bundleRelease -PallowTestAds=true")
+            },
+        )
+    }
+}
+
+/**
+ * Prints what the build actually resolved, so "is this release configured?" is a question
+ * with an answer rather than something you find out from the Play Console a day later.
+ */
+tasks.register("adConfig") {
+    group = "verification"
+    description = "Prints the resolved AdMob, signing and update configuration."
+    doLast {
+        fun show(label: String, value: String, secret: Boolean = false) {
+            val shown = when {
+                value.isBlank() -> "(not set)"
+                secret -> "(set)"
+                value.startsWith(TEST_PUBLISHER) -> "$value   <-- GOOGLE TEST ID"
+                else -> value
+            }
+            println("  %-22s %s".format(label, shown))
+        }
+        println("\nDEBUG  — always Google's test ids, not configurable")
+        show("app id", TEST_APP_ID)
+        show("banner", TEST_BANNER)
+        show("interstitial", TEST_INTERSTITIAL)
+        show("rewarded", TEST_REWARDED)
+
+        println("\nRELEASE — from ~/.gradle/gradle.properties")
+        show("app id", adUnit("admobAppId", TEST_APP_ID))
+        show("banner", adUnit("admobBanner", TEST_BANNER))
+        show("interstitial", adUnit("admobInterstitial", TEST_INTERSTITIAL))
+        show("rewarded", adUnit("admobRewarded", TEST_REWARDED))
+
+        println("\nSIGNING")
+        show("keystore", storeFilePath ?: "")
+        show("store password", signingProp("warforgeStorePassword") ?: "", secret = true)
+        show("key alias", signingProp("warforgeKeyAlias") ?: "")
+        show("key password", signingProp("warforgeKeyPassword") ?: "", secret = true)
+
+        println("\nUPDATE CHECK")
+        show("manifest url", UPDATE_MANIFEST_URL)
+        println()
+    }
 }
 
 android {

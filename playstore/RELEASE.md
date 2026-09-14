@@ -59,6 +59,18 @@ Debug builds use Google's test ids for **both** the app id and the unit ids; cli
 your own live ads is invalid traffic and gets the AdMob account closed. `AdConfigTest`
 fails the build if a debug variant ever names a live unit.
 
+A **release build refuses to run** without real ids rather than falling back to the test
+ones — a release that ships test ids shows every player a banner reading "Test Ad" and
+earns nothing, and nothing else would have caught it. The same check rejects an id of the
+wrong shape, which catches the commonest mistake of all: a `~` where a `/` belongs.
+
+```bash
+./gradlew adConfig                          # what did the build actually resolve?
+./gradlew bundleRelease -PallowTestAds=true # deliberate: signing rehearsal, screenshots
+```
+
+`gradle.properties.template` at the repository root lists every key with what it is for.
+
 ### 1.3 Host the privacy policy — DONE
 
 Play will not accept an app that shows ads without one. The policy is published from

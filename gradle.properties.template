@@ -1,0 +1,48 @@
+# Warforge — local build configuration
+#
+# Copy the keys you need into ~/.gradle/gradle.properties (NOT into this repository's
+# gradle.properties, which is committed). Values there apply to every project on this
+# machine, which is what you want for a signing key and an AdMob account.
+#
+#     cp gradle.properties.template ~/.gradle/gradle.properties   # first time only
+#     chmod 600 ~/.gradle/gradle.properties
+#
+# Check what the build actually resolved at any time:
+#
+#     ./gradlew adConfig
+#
+# ---------------------------------------------------------------------------
+# AdMob — required for a release build
+# ---------------------------------------------------------------------------
+# Debug builds ignore all of this and always use Google's test ids, for both the app id
+# and the unit ids. Clicking your own live ads is invalid traffic and closes the account.
+#
+# A release build REFUSES to run without these. It will not quietly fall back to test
+# ids, because a release that ships them shows every player a banner reading "Test Ad"
+# and earns nothing.
+#
+# Only the three formats the app implements. There is no native or app-open placement.
+admobAppId=ca-app-pub-0000000000000000~0000000000
+admobBanner=ca-app-pub-0000000000000000/0000000000
+admobInterstitial=ca-app-pub-0000000000000000/0000000000
+admobRewarded=ca-app-pub-0000000000000000/0000000000
+
+# ---------------------------------------------------------------------------
+# Release signing — required to publish
+# ---------------------------------------------------------------------------
+# Created by scripts/create-keystore.sh, which writes these four lines for you.
+# Losing the keystore means never being able to update the app again: back it up with
+# scripts/backup-keystore.sh and keep the password in a password manager.
+#
+# Unset, a release build still works and comes out unsigned rather than broken.
+warforgeStoreFile=/Users/you/keys/warforge.jks
+warforgeStorePassword=
+warforgeKeyAlias=warforge
+warforgeKeyPassword=
+
+# ---------------------------------------------------------------------------
+# Update check — optional
+# ---------------------------------------------------------------------------
+# Where the app looks for the published version manifest. Unset, the app never checks
+# and never touches the network for it.
+updateManifestUrl=https://raw.githubusercontent.com/aungkaungmyatpaing/warforge/main/version.json
