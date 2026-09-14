@@ -5,6 +5,7 @@ import android.media.AudioFormat
 import android.media.AudioTrack
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import kotlin.math.PI
 import kotlin.math.exp
 import kotlin.math.roundToInt
@@ -38,6 +39,9 @@ object Music {
     private var track: AudioTrack? = null
     private var building = false
     private var wanted = false
+
+    /** Set once a device has refused to give us an AudioTrack, so we stop asking. */
+    private var unavailable = false
     private val handler = Handler(Looper.getMainLooper())
     private val pauseSoon = Runnable { pauseNow() }
 
@@ -58,8 +62,16 @@ object Music {
             val pcm = render()
             handler.post {
                 building = false
-                if (!wanted || !enabled) return@post
-                track = build(pcm).also { it.play() }
+                if (!wanted || !enabled || unavailable) return@post
+                val built = build(pcm)
+                if (built == null) {
+                    // The device will not give us an AudioTrack. Stop asking - retrying
+                    // on every screen change would just fail on every screen change.
+                    unavailable = true
+                    Log.w("Warforge", "music unavailable on this device")
+                    return@post
+                }
+                track = built.also { it.play() }
             }
         }, "warforge-music").apply { isDaemon = true }.start()
     }
@@ -89,7 +101,26 @@ object Music {
         track = null
     }
 
-    private fun build(pcm: ShortArray): AudioTrack {
+    /**
+     * Builds the looping track, or returns null if this device will not give us one.
+     *
+     * Every call here can fail and one of them does in practice: a MODE_STATIC track
+     * needs its whole buffer - about 1.3 MB for half a minute of 22 kHz mono - out of a
+     * pool of shared audio memory, and `Builder.build()` throws
+     * UnsupportedOperationException when there is not enough. It ran on the main thread
+     * inside a posted Runnable, so on a device that refused, background music took the
+     * entire game down on launch.
+     *
+     * Music is decoration. It is never worth a crash.
+     */
+    private fun build(pcm: ShortArray): AudioTrack? = try {
+        buildOrThrow(pcm)
+    } catch (e: Exception) {
+        Log.w("Warforge", "could not start music", e)
+        null
+    }
+
+    private fun buildOrThrow(pcm: ShortArray): AudioTrack {
         val bytes = pcm.size * 2
         val audio = AudioTrack.Builder()
             .setAudioAttributes(
@@ -108,9 +139,16 @@ object Music {
             .setBufferSizeInBytes(bytes)
             .setTransferMode(AudioTrack.MODE_STATIC)
             .build()
-        audio.write(pcm, 0, pcm.size)
-        audio.setLoopPoints(0, pcm.size, -1)
-        audio.setVolume(0.32f)
+        // Past this point the track exists and has to be released if anything fails,
+        // or the audio memory it just claimed is gone until the process dies.
+        try {
+            audio.write(pcm, 0, pcm.size)
+            audio.setLoopPoints(0, pcm.size, -1)
+            audio.setVolume(0.32f)
+        } catch (e: Exception) {
+            audio.release()
+            throw e
+        }
         return audio
     }
 
